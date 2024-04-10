@@ -88,6 +88,7 @@ if (isset($_SESSION['role'])) {
         </div>
         <div class="text-center">
             <button type="submit" name="submit" class="btn btn-primary">Login</button>
+            <a href="register.php" class="btn btn-primary">Register</a>
         </div>
     </form>
 </div>
