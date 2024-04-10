@@ -46,9 +46,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $image = $_FILES['image'];
 
     if ($product->saveProduct($name, $description, $price, $image)) {
-        echo "Product saved successfully!";
+        $data['status'] = 200; 
+        $data['message'] = "Product saved successfully!"; 
     } else {
-        echo "Error occurred while saving product.";
+        $data['status'] = 400; 
+        $data['message'] = "Error occurred while saving product."; 
     }
+    echo json_encode($data);
 }
 ?>

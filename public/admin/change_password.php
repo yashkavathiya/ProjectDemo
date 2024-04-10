@@ -7,7 +7,20 @@ if ($mysqli->connect_error) {
     die("Connection failed: " . $mysqli->connect_error);
 }
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+if (!isset($_SESSION["role"])) {
+    header("Location: ../login.php");
+}
+if (isset($_SESSION["role"])) {
+    if ($_SESSION['role'] == 'user') {
+        header("Location: ./../user/home.php");
+        exit;
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

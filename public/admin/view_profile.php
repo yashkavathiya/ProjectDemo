@@ -7,15 +7,30 @@ if ($mysqli->connect_error) {
     die("Connection failed: " . $mysqli->connect_error);
 }
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+if (!isset($_SESSION["role"])) {
+    header("Location: ../login.php");
+}
+if (isset($_SESSION["role"])) {
+    if ($_SESSION['role'] == 'user') {
+        header("Location: ./../user/home.php");
+        exit;
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Profile</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+
 <body>
     <div class="container mt-5">
         <div class="row justify-content-center">
@@ -25,17 +40,17 @@ if ($mysqli->connect_error) {
                         Admin Profile
                     </div>
                     <div class="card-body">
-                    <?php
+                        <?php
                         $query = "SELECT * FROM users where role_type=1";
                         $result = $mysqli->query($query);
-                        
+
                         if (!$result) {
                             printf("Error: %s\n", $mysqli->error);
                             exit();
                         }
 
                         $row = $result->fetch_assoc();
-                    ?>
+                        ?>
                         <form id="productForm">
                             <div class="form-group">
                                 <label for="name">Name</label>
@@ -63,8 +78,8 @@ if ($mysqli->connect_error) {
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        $(document).ready(function(){
-            $('#productForm').submit(function(e){
+        $(document).ready(function() {
+            $('#productForm').submit(function(e) {
                 e.preventDefault();
                 var name = $('#name').val();
                 var email = $('#email').val();
@@ -75,21 +90,21 @@ if ($mysqli->connect_error) {
 
                 // Validate form fields
                 var isValid = true;
-                if(name.trim() == '') {
+                if (name.trim() == '') {
                     $('#nameError').text('Name is required');
                     isValid = false;
                 }
-                if(email.trim() == '') {
+                if (email.trim() == '') {
                     $('#emailError').text('Email is required');
                     isValid = false;
                 }
-                if(phone.trim() == '') {
+                if (phone.trim() == '') {
                     $('#phoneError').text('Phone is required');
                     isValid = false;
                 }
-                
+
                 // Submit form if valid
-                if(isValid) {
+                if (isValid) {
                     // Perform AJAX request to save data
                     $.ajax({
                         url: '../../class/update_admin_profile.php',
@@ -110,4 +125,5 @@ if ($mysqli->connect_error) {
         });
     </script>
 </body>
+
 </html>

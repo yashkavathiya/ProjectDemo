@@ -20,11 +20,19 @@ $style =
         margin-top: 100px;
     }
 </style>";
-
+if (isset($_SESSION["role"])) {
+    if ($_SESSION['role'] == 'admin') {
+        header("Location: admin/home.php");
+        exit;
+    } else {
+        header("Location: user/home.php");
+        exit;
+    }
+}
 if (isset($_POST['submit'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
-
+    $password = md5($password);
     $h = new Common();
     $count = $h->Login($email, $password, 'users');
 
@@ -33,10 +41,9 @@ if (isset($_POST['submit'])) {
 
         $email = $mysqli->real_escape_string($_POST['email']);
         $password = $mysqli->real_escape_string($_POST['password']);
-        
+        $password = md5($password);
         $query = "SELECT * FROM `users` WHERE email = '$email' AND password = '$password'";
         $result = $mysqli->query($query);
-        
         if ($result) {
             $partner = $result->fetch_assoc();
             if ($partner['role_type'] == '1') {
@@ -81,7 +88,6 @@ if (isset($_SESSION['role'])) {
         </div>
         <div class="text-center">
             <button type="submit" name="submit" class="btn btn-primary">Login</button>
-            <a href="register.php" class="btn btn-primary">Register</a>
         </div>
     </form>
 </div>
