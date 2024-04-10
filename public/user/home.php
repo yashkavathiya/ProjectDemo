@@ -57,6 +57,9 @@ if ($mysqli->connect_error) {
         <a class="nav-link" href="#">Contact</a>
       </li>
       <li class="nav-item mt-2">
+        <a class="nav-link" href="./view_profile.php">Profile</a>
+      </li>
+      <li class="nav-item mt-2">
         <a class="nav-link" href="./logout.php">Logout</a>
       </li>
     </ul>

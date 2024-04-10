@@ -77,6 +77,7 @@ if (isset($_SESSION["role"])) {
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
             $('#productForm').submit(function(e) {
@@ -113,8 +114,22 @@ if (isset($_SESSION["role"])) {
                         processData: false,
                         contentType: false,
                         success: function(response) {
-                            alert(response);
-                            // You can perform further actions here, like redirecting to a different page.
+                            var responseData = JSON.parse(response);
+                            if (responseData.status == 200) {
+                                Swal.fire({
+                                    text: responseData.message,
+                                    icon: "success"
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = 'home.php'; // Redirect to home.php
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    text: responseData.message,
+                                    icon: "error"
+                                });
+                            }
                         },
                         error: function(xhr, status, error) {
                             console.error(xhr.responseText);

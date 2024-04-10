@@ -25,15 +25,15 @@ class Product {
 if(isset($_POST['id'])) {
     $product = new Product($mysqli);
     
-    $productId = $_POST['id'];
-
+    $productId = $_POST['id'];    
     if ($product->deleteProduct($productId)) {
-        echo "Product deleted successfully!";
+        $data['status'] = 200; 
+        $data['message'] = "Product deleted successfully!"; 
     } else {
-        echo "Error occurred while deleting product.";
+        $data['status'] = 400; 
+        $data['message'] = "Error occurred while saving product."; 
     }
-
-    $product->closeConnection();
+    echo json_encode($data);
 } else {
     echo "Product ID not provided.";
 }

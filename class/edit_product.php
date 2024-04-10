@@ -92,9 +92,11 @@ if(isset($_POST['id'])) {
             
             // Update the product and echo the result
             if ($product->updateProduct($productId, $name, $description, $price, $image)) {
-                echo "Product updated successfully!";
+                $data['status'] = 200; 
+                $data['message'] = "Product updated successfully!"; 
             } else {
-                echo "Error occurred while updating product.";
+                $data['status'] = 400; 
+                $data['message'] = "Error occurred while saving product."; 
             }
 
             // Close database connection
@@ -104,8 +106,10 @@ if(isset($_POST['id'])) {
             include '../public/admin/edit_product_form.php';
         }
     } else {
-        echo "Product not found.";
+        $data['status'] = 400; 
+        $data['message'] = "Product not found"; 
     }
+    echo json_encode($data);
 }
 
 ?>

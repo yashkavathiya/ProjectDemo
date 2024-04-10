@@ -10,7 +10,8 @@ class Profile {
     }
 
     public function updateProfile($name, $email, $phone) {
-        $stmt = $this->mysqli->prepare("UPDATE users SET name = ?, email = ?, phone = ? WHERE role_type = 1");
+        $id = $_SESSION['id'];
+        $stmt = $this->mysqli->prepare("UPDATE users SET name = ?, email = ?, phone = ? WHERE id = $id");
         
         // Check for errors during query preparation
         if (!$stmt) {
@@ -45,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($profile->updateProfile($name, $email, $phone)) {
         $data['status'] = 200; 
-        $data['message'] = "Admin profile updated successfully!"; 
+        $data['message'] = "User profile updated successfully!"; 
     } else {
         $data['status'] = 400; 
         $data['message'] = "Error occurred while saving product."; 

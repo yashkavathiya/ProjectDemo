@@ -1,0 +1,145 @@
+<?php
+// Establish database connection
+require '../../config/dbconfig.php';
+
+// Check if connection is successful
+if ($mysqli->connect_error) {
+    die("Connection failed: " . $mysqli->connect_error);
+}
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+if (!isset($_SESSION["role"])) {
+    header("Location: ../login.php");
+}
+if (isset($_SESSION["role"])) {
+    if ($_SESSION['role'] == 'admin') {
+        header("Location: ./../admin/home.php");
+        exit;
+    }
+}
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        User Profile
+                    </div>
+                    <div class="card-body">
+                        <?php
+                        $id = $_SESSION['id'];
+                        $query = "SELECT * FROM users where id='$id'";
+                        $result = $mysqli->query($query);
+
+                        if (!$result) {
+                            printf("Error: %s\n", $mysqli->error);
+                            exit();
+                        }
+
+                        $row = $result->fetch_assoc();
+                        ?>
+                        <form id="productForm">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="<?php echo $row['name']; ?>">
+                                <small class="text-danger" id="nameError"></small>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control" id="email" name="email" value="<?php echo $row['email']; ?>">
+                                <small class="text-danger" id="emailError"></small>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Phone</label>
+                                <input type="text" class="form-control" id="phone" name="phone" value="<?php echo $row['phone']; ?>">
+                                <small class="text-danger" id="phoneError"></small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function() {
+            $('#productForm').submit(function(e) {
+                e.preventDefault();
+                var name = $('#name').val();
+                var email = $('#email').val();
+                var phone = $('#phone').val();
+
+                // Reset error messages
+                $('.text-danger').text('');
+
+                // Validate form fields
+                var isValid = true;
+                if (name.trim() == '') {
+                    $('#nameError').text('Name is required');
+                    isValid = false;
+                }
+                if (email.trim() == '') {
+                    $('#emailError').text('Email is required');
+                    isValid = false;
+                }
+                if (phone.trim() == '') {
+                    $('#phoneError').text('Phone is required');
+                    isValid = false;
+                }
+
+                // Submit form if valid
+                if (isValid) {
+                    // Perform AJAX request to save data
+                    $.ajax({
+                        url: '../../class/update_user_profile.php',
+                        type: 'post',
+                        data: new FormData(this),
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            var responseData = JSON.parse(response);
+                            if (responseData.status == 200) {
+                                Swal.fire({
+                                    text: responseData.message,
+                                    icon: "success"
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = 'home.php'; // Redirect to home.php
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    text: responseData.message,
+                                    icon: "error"
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

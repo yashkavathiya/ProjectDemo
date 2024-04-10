@@ -35,7 +35,7 @@
                             Product List
                         </div>
                         <div class="card-body">
-                            <table class="table">
+                            <table class="table" id="list">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -58,7 +58,7 @@
         <!-- Bootstrap and jQuery scripts -->
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             // Function to fetch and display product data
             function fetchProducts() {
@@ -109,9 +109,22 @@
                             id: productId
                         },
                         success: function(response) {
-                            alert(response);
-                            // Refresh product list after deletion
-                            fetchProducts();
+                            var responseData = JSON.parse(response);
+                            if (responseData.status == 200) {
+                                Swal.fire({
+                                    text: responseData.message,
+                                    icon: "success"
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.reload(); // Reload the entire page
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    text: responseData.message,
+                                    icon: "error"
+                                });
+                            }
                         },
                         error: function(xhr, status, error) {
                             console.error(xhr.responseText);
