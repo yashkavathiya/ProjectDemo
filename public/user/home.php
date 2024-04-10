@@ -1,7 +1,6 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
 // Establish database connection
 require '../../config/dbconfig.php';
 
@@ -9,7 +8,18 @@ require '../../config/dbconfig.php';
 if ($mysqli->connect_error) {
   die("Connection failed: " . $mysqli->connect_error);
 }
-
+if (session_status() == PHP_SESSION_NONE) {
+  session_start();
+}
+if (!isset($_SESSION["role"])) {
+  header("Location: ../login.php");
+}
+if (isset($_SESSION["role"])) {
+  if ($_SESSION['role'] == 'admin') {
+    header("Location: ./../admin/home.php");
+    exit;
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -41,20 +51,16 @@ if ($mysqli->connect_error) {
 <body class="bg-info">
   <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <!-- Brand -->
-    <a class="navbar-brand" href="#">UI-MONK</a>
+    <a class="navbar-brand" href="#"><?php if (isset($_SESSION["username"])) {
+                                        echo $_SESSION["username"];
+                                      } ?></a>
     <!-- Links -->
     <ul class="navbar-nav ml-auto">
       <li class="nav-item mt-2">
-        <a class="nav-link" href="#">Home</a>
+        <a class="nav-link" href="home.php">Home</a>
       </li>
       <li class="nav-item mt-2">
-        <a class="nav-link" href="#">Shop</a>
-      </li>
-      <li class="nav-item mt-2">
-        <a class="nav-link" href="#">My Account</a>
-      </li>
-      <li class="nav-item mt-2">
-        <a class="nav-link" href="#">Contact</a>
+        <a class="nav-link" href="#product-list">Product</a>
       </li>
       <li class="nav-item mt-2">
         <a class="nav-link" href="./view_profile.php">Profile</a>
@@ -63,6 +69,9 @@ if ($mysqli->connect_error) {
         <a class="nav-link" href="./logout.php">Logout</a>
       </li>
     </ul>
+    <div class="bg-primary mt-2">
+      <a class="nav-link" href="#">Cart</a>
+    </div>
   </nav>
   <section id="banner" style="background: #F9F3EC;">
     <div class="container">
@@ -144,7 +153,7 @@ if ($mysqli->connect_error) {
   }
 
   if ($result->num_rows > 0) {
-    echo '<div class="content mt-5">';
+    echo '<div class="content mt-5" id="product-list">';
     echo '<ul class="rig columns-4">';
 
     // Loop through each product
@@ -157,9 +166,15 @@ if ($mysqli->connect_error) {
       echo '<p>' . $row['description'] . '</p>';
       echo '<div class="price">$' . $row['price'] . '</div>';
       echo '<hr>';
-      echo '<button class="btn btn-default btn-xs pull-right" type="button">';
-      echo '<i class="fa fa-cart-arrow-down"></i> Add To Cart';
-      echo '</button>';
+      if (isset($_SESSION['carts']) && in_array($row['id'], $_SESSION['carts'])) {
+        echo '<button class="btn btn-secondary btn-xs float-end" type="button">';
+        echo '<i class="fa fa-cart-arrow-down"></i> Added';
+        echo '</button>';
+      } else {
+        echo '<button class="btn btn-secondary btn-xs float-end add-cart" data-id="' . $row["id"] . '" type="button">';
+        echo '<i class="fa fa-cart-arrow-down"></i> Add To Cart';
+        echo '</button>';
+      }
       echo '<button class="btn btn-default btn-xs pull-left" type="button">';
       echo '<a href="single_product.php?id=' . $row['id'] . '" class="fa fa-eye">Details</a>';
       echo '</button>';
@@ -181,6 +196,26 @@ if ($mysqli->connect_error) {
   <script src="../../assets/js/plugins.js"></script>
   <script src="../../assets/js/script.js"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <script>
+    let cart = [];
+    $(document).on("click", ".add-cart", function() {
+      let pid = $(this).data('id');
+      cart.push(pid);
+      $.ajax({
+        url: 'update_cart_session.php',
+        type: 'post',
+        data: {
+          cart: cart
+        },
+        success: function(response) {
+          console.log(response); // Log the response from the server
+        },
+        error: function(xhr, status, error) {
+          console.error(xhr.responseText);
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
