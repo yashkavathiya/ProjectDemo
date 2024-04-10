@@ -48,10 +48,16 @@ if (isset($_POST['submit'])) {
             $partner = $result->fetch_assoc();
             if ($partner['role_type'] == '1') {
                 $_SESSION['role'] = 'admin';
+                $_SESSION['username'] = $partner['name'];
+                $_SESSION['email'] = $partner['email'];
+                $_SESSION['id'] = $partner['id'];
                 header("Location: admin/home.php");
                 exit;
             } else {
                 $_SESSION['role'] = 'user';
+                $_SESSION['username'] = $partner['name'];
+                $_SESSION['email'] = $partner['email'];
+                $_SESSION['id'] = $partner['id'];
                 header("Location: user/home.php");
                 exit;
             }
