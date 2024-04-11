@@ -235,8 +235,8 @@ if (isset($_GET['action'])) {
       echo '<i class="fa fa-cart-arrow-down"></i> Add To Cart';
       echo '</button>';
       echo '</form>';
-      echo '<button class="btn btn-default btn-xs pull-left" type="button">';
-      echo '<a href="single_product.php?id=' . $row['id'] . '"> <i class="fa fa-eye"> </i> Details</a>';
+      // echo '<button class="btn btn-default btn-xs pull-left" type="button">';
+      echo '<button class="btn btn-secondary btn-xs pull-left" onclick="location.href=\'single_product.php?id=' . $row['id'] . '\'"><i class="fa fa-eye"></i> Details</button>';
       echo '</button>';
       echo '</li>';
     }
@@ -295,6 +295,22 @@ if (isset($_GET['action'])) {
         </div>
       </div>
     <?php } ?>
+  </div>
+  <div id="footer-bottom">
+    <div class="container">
+      <hr class="m-0">
+      <div class="row mt-3">
+        <div class="col-md-6 copyright">
+          <p class="secondary-font">© 2024 Woodshop. All rights reserved.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p class="secondary-font">Free HTML Template by <a href="https://templatesjungle.com/" target="_blank"
+              class="text-decoration-underline fw-bold text-black-50"> TemplatesJungle</a> </p>
+          <p class="secondary-font">Distributed by <a href="https://themewagon.com/" target="_blank"
+              class="text-decoration-underline fw-bold text-black-50"> ThemeWagon</a> </p>
+        </div>
+      </div>
+    </div>
   </div>
   <script src="../../assets/js/jquery-1.11.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
