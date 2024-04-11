@@ -31,10 +31,21 @@ if (isset($_POST['add_to_cart'])) {
         'item_price' => $_POST['hidden_price'],
       );
       $_SESSION['shopping_cart'][$count] = $item_array;
-      echo '<script>window.location="home.php"</script>';
     } else {
-      echo '<script>alert("Product Already Added")</script>';
-      echo '<script>window.location="home.php"</script>';
+?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script>
+          Swal.fire({
+            text: responseData.message,
+            icon: "success"
+          });
+      </script>;
+<?php
+      if (!isset($_GET['page'])) {
+        echo '<script>window.location="home.php"</script>';
+      } else {
+        echo "<script>window.location='single_product.php?id=" . $_GET['id'] . "'</script>";
+      }
     }
   } else {
     $item_array = array(
@@ -302,26 +313,6 @@ if (isset($_GET['action'])) {
   <script src="../../assets/js/plugins.js"></script>
   <script src="../../assets/js/script.js"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-  <script>
-    // let cart = [];
-    // $(document).on("click", ".add-cart", function() {
-    //   let pid = $(this).data('id');
-    //   cart.push(pid);
-    //   $.ajax({
-    //     url: 'update_cart_session.php',
-    //     type: 'post',
-    //     data: {
-    //       cart: cart
-    //     },
-    //     success: function(response) {
-    //       console.log(response); // Log the response from the server
-    //     },
-    //     error: function(xhr, status, error) {
-    //       console.error(xhr.responseText);
-    //     }
-    //   });
-    // });
-  </script>
 </body>
 
 </html>
