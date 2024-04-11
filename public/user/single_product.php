@@ -33,12 +33,20 @@ if ($mysqli->connect_error) {
 
         .navbar {
             background-color: #edd0af !important;
+            padding: 14px;;
         }
 
         .product-image {
             max-width: 100%;
             height: auto;
         }
+
+        #footer-bottom {
+            bottom: 0px;
+            position: absolute;
+            width: 100%;
+        }
+        
     </style>
 </head>
 
@@ -125,58 +133,71 @@ if ($mysqli->connect_error) {
     </div>
 
     <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCart" aria-labelledby="My Cart">
-    <div class="offcanvas-header justify-content-center">
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <?php
-    if (!empty($_SESSION['shopping_cart'])) {
-    ?>
-      <div class="offcanvas-body">
-        <div class="order-md-last">
-
-          <h4 class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text-primary">Your cart</span>
-            <span class="badge bg-primary rounded-circle pt-2">
-              <?php
-              if (!empty($_SESSION['shopping_cart'])) {
-                echo count($_SESSION['shopping_cart']);
-              }
-              ?>
-            </span>
-          </h4>
-          <ul class="list-group mb-3">
-            <?php
-            $total = 0;
-            foreach ($_SESSION['shopping_cart'] as $keys => $values) {
-            ?>
-              <li class="list-group-item d-flex justify-content-between lh-sm">
-                <div>
-                  <h6 class="my-0"><?php echo $values['item_title']; ?></h6>
-                  <a href="home.php?action=delete&id=<?php echo $values["item_id"]; ?>"><small class="text-xs text-danger">Remove</small></a>
-                </div>
-                <span class="text-body-secondary">$<?php echo $values['item_price']; ?></span>
-              </li>
-            <?php
-              $total += $values['item_price'];
-            } ?>
-            <li class="list-group-item d-flex justify-content-between">
-              <span class="fw-bold">Total (USD)</span>
-              <strong>$<?php echo $total; ?></strong>
-            </li>
-          </ul>
-
-          <a href="home.php?action=checkout" class="w-100 btn btn-primary btn-lg">Continue to checkout</a>
+        <div class="offcanvas-header justify-content-center">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-      </div>
-    <?php } ?>
-  </div>
-  <script src="../../assets/js/jquery-1.11.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-  <script src="../../assets/js/plugins.js"></script>
-  <script src="../../assets/js/script.js"></script>
-  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <?php
+        if (!empty($_SESSION['shopping_cart'])) {
+        ?>
+            <div class="offcanvas-body">
+                <div class="order-md-last">
+
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-primary">Your cart</span>
+                        <span class="badge bg-primary rounded-circle pt-2">
+                            <?php
+                            if (!empty($_SESSION['shopping_cart'])) {
+                                echo count($_SESSION['shopping_cart']);
+                            }
+                            ?>
+                        </span>
+                    </h4>
+                    <ul class="list-group mb-3">
+                        <?php
+                        $total = 0;
+                        foreach ($_SESSION['shopping_cart'] as $keys => $values) {
+                        ?>
+                            <li class="list-group-item d-flex justify-content-between lh-sm">
+                                <div>
+                                    <h6 class="my-0"><?php echo $values['item_title']; ?></h6>
+                                    <a href="home.php?action=delete&id=<?php echo $values["item_id"]; ?>"><small class="text-xs text-danger">Remove</small></a>
+                                </div>
+                                <span class="text-body-secondary">$<?php echo $values['item_price']; ?></span>
+                            </li>
+                        <?php
+                            $total += $values['item_price'];
+                        } ?>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-bold">Total (USD)</span>
+                            <strong>$<?php echo $total; ?></strong>
+                        </li>
+                    </ul>
+
+                    <a href="home.php?action=checkout" class="w-100 btn btn-primary btn-lg">Continue to checkout</a>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+    <div id="footer-bottom">
+        <div class="container">
+            <hr class="m-0">
+            <div class="row mt-3">
+                <div class="col-md-6 copyright">
+                    <p class="secondary-font">© 2024 Woodshop. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <!-- <p>2024-2025</p> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../assets/js/jquery-1.11.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="../../assets/js/plugins.js"></script>
+    <script src="../../assets/js/script.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>
