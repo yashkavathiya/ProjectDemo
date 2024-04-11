@@ -52,13 +52,17 @@ if(isset($_GET['id'])) {
 
             // Update the product and echo the result
             if ($product->updateProduct($productId, $name, $description, $price,$image)) {
-                echo "Product updated successfully!";
+                $data['status'] = 200; 
+                $data['message'] = "Product updated successfully!"; 
             } else {
-                echo "Error occurred while updating product.";
+                $data['status'] = 400; 
+                $data['message'] = "Error occurred while updating product."; 
             }
 
             // Close database connection
             $product->closeConnection();
+            echo json_encode($data); // Send JSON response
+            exit;
         } else {
             // Include the HTML form
             include '../public/admin/edit_product_form.php';
@@ -101,6 +105,8 @@ if(isset($_POST['id'])) {
 
             // Close database connection
             $product->closeConnection();
+            echo json_encode($data); // Send JSON response
+            exit;
         } else {
             // Include the HTML form
             include '../public/admin/edit_product_form.php';
@@ -108,8 +114,25 @@ if(isset($_POST['id'])) {
     } else {
         $data['status'] = 400; 
         $data['message'] = "Product not found"; 
+        echo json_encode($data); // Send JSON response
     }
-    echo json_encode($data);
 }
-
 ?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript">
+    // Function to handle AJAX response and show SweetAlert
+    function handleAjaxResponse(response) {
+        if(response.status == 200) {
+            Swal.fire("Success", response.message, "success").then(() => { 
+                window.location.href = "../public/admin/home.php"; 
+            });
+        } else {
+            Swal.fire("Error", response.message, "error");
+        }
+    }
+
+    // Check if there is a JSON response from the server
+    <?php if(isset($data)): ?>
+        handleAjaxResponse(<?php echo json_encode($data); ?>);
+    <?php endif; ?>
+</script>

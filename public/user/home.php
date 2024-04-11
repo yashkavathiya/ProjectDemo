@@ -66,6 +66,9 @@ if (isset($_SESSION["role"])) {
         <a class="nav-link" href="./view_profile.php">Profile</a>
       </li>
       <li class="nav-item mt-2">
+        <a class="nav-link" href="./change_password.php">Password</a>
+      </li>
+      <li class="nav-item mt-2">
         <a class="nav-link" href="./logout.php">Logout</a>
       </li>
     </ul>
